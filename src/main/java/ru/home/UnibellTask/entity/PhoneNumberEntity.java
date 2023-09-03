@@ -1,15 +1,13 @@
-package ru.home.UnibellTask.entities;
+package ru.home.UnibellTask.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Getter
+@Setter
+@Builder
 @Entity
 @Table(name = "phone_numbers")
 public class PhoneNumberEntity {
@@ -21,7 +19,7 @@ public class PhoneNumberEntity {
     @Column(name = "phone_number")
     private long phoneNumber;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "consumers_id", referencedColumnName = "id")
     private ConsumerEntity consumerEntity;
 }
