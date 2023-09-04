@@ -2,7 +2,6 @@ package ru.home.UnibellTask.dto;
 
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -12,7 +11,7 @@ import java.util.List;
 @Setter
 public class ConsumerPhoneNumberDTO implements Contact {
 
-    String name;
-    List<Long> phones;
+    private String name;
+    private List<Long> phones;
 
 }

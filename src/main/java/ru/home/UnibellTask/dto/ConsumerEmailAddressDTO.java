@@ -9,7 +9,9 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class ConsumerEmailAddressDTO implements Contact{
-    String name;
-    List<String> emails;
+public class ConsumerEmailAddressDTO implements Contact {
+
+    private String name;
+    private List<String> emails;
+
 }

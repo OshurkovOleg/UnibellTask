@@ -18,6 +18,7 @@ public class ConsumerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NonNull
     @Column(name = "full_name")
     private String name;
 
@@ -26,4 +27,5 @@ public class ConsumerEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "consumerEntity")
     private List<EmailAddressEntity> emails;
+
 }

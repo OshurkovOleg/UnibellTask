@@ -10,29 +10,36 @@ import ru.home.UnibellTask.repository.EmailAddressRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static ru.home.UnibellTask.constant.Constants.CONSUMER_NOT_FOUND;
 
 @AllArgsConstructor
 @Service
 public class EmailAddressService {
 
-    EmailAddressRepository emailAddressRepository;
-    ConsumerRepository consumerRepository;
+    private final EmailAddressRepository emailAddressRepository;
+    private final ConsumerRepository consumerRepository;
 
     public void save(long consumerID, EmailAddressEntity email) {
-        ConsumerEntity consumer = consumerRepository.findById(consumerID).get();
-        email.setConsumerEntity(consumer);
+        email.setConsumerEntity(getConsumer(consumerID));
         emailAddressRepository.save(email);
     }
 
-    public ConsumerEmailAddressDTO get(long id) {
+    public ConsumerEmailAddressDTO get(long consumerID) {
         List<String> emailsConsumer = new ArrayList<>();
-        ConsumerEntity consumer = consumerRepository.findById(id).get();
+        ConsumerEntity consumer = getConsumer(consumerID);
         consumer.getEmails().forEach(email -> emailsConsumer.add(email.getEmailAddress()));
 
         return ConsumerEmailAddressDTO.builder()
                 .name(consumer.getName())
                 .emails(emailsConsumer)
                 .build();
+    }
+
+    private ConsumerEntity getConsumer(long consumerID) {
+        return consumerRepository.findById(consumerID)
+                .orElseThrow(() -> new NoSuchElementException(CONSUMER_NOT_FOUND));
     }
 
 }

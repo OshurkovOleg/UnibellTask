@@ -8,32 +8,43 @@ import ru.home.UnibellTask.entity.PhoneNumberEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static ru.home.UnibellTask.constant.Constants.EMAIL_NOT_FOUND;
+import static ru.home.UnibellTask.constant.Constants.PHONE_NOT_FOUND;
 
 @Component
 public class ConsumerMapper {
+
     public ConsumerDTO toDTO(ConsumerEntity consumerEntity) {
         return ConsumerDTO.builder()
                 .name(consumerEntity.getName())
-                .email(consumerEntity.getEmails().stream()
-                        .findFirst().get()
-                        .getEmailAddress())
-                .phone(consumerEntity.getPhones().stream()
-                        .findFirst().get()
-                        .getPhoneNumber())
+                .email(getEmailAddress(consumerEntity))
+                .phone(getPhoneNumber(consumerEntity))
                 .build();
+    }
+
+    private long getPhoneNumber(ConsumerEntity consumerEntity) {
+        return consumerEntity.getPhones().stream()
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(PHONE_NOT_FOUND))
+                .getPhoneNumber();
+    }
+
+    private String getEmailAddress(ConsumerEntity consumerEntity) {
+        return consumerEntity.getEmails().stream()
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(EMAIL_NOT_FOUND))
+                .getEmailAddress();
     }
 
     public ConsumerEntity toEntity(ConsumerDTO consumerDTO) {
 
-        List<PhoneNumberEntity> phonesEntity = new ArrayList<>();
-        phonesEntity.add(PhoneNumberEntity.builder()
-                .phoneNumber(consumerDTO.getPhone())
-                .build());
-
         List<EmailAddressEntity> emailsEntity = new ArrayList<>();
-        emailsEntity.add(EmailAddressEntity.builder()
-                .emailAddress(consumerDTO.getEmail())
-                .build());
+        emailsEntity.add(getEmailAddressEntity(consumerDTO));
+
+        List<PhoneNumberEntity> phonesEntity = new ArrayList<>();
+        phonesEntity.add(getPhoneNumberEntity(consumerDTO));
 
         return ConsumerEntity.builder()
                 .name(consumerDTO.getName())
@@ -41,4 +52,17 @@ public class ConsumerMapper {
                 .phones(phonesEntity)
                 .build();
     }
+
+    private PhoneNumberEntity getPhoneNumberEntity(ConsumerDTO consumerDTO) {
+        return PhoneNumberEntity.builder()
+                .phoneNumber(consumerDTO.getPhone())
+                .build();
+    }
+
+    private EmailAddressEntity getEmailAddressEntity(ConsumerDTO consumerDTO) {
+        return EmailAddressEntity.builder()
+                .emailAddress(consumerDTO.getEmail())
+                .build();
+    }
+
 }

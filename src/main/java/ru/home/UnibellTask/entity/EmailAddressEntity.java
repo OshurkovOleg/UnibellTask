@@ -16,10 +16,12 @@ public class EmailAddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NonNull
     @Column(name = "email_address")
     private String emailAddress;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "consumers_id", referencedColumnName = "id")
     private ConsumerEntity consumerEntity;
+
 }

@@ -11,6 +11,6 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 

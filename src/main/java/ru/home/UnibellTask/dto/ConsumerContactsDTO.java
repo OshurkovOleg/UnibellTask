@@ -11,9 +11,9 @@ import java.util.Map;
 @Builder
 @Getter
 @Setter
-public class ConsumerContactsDTO {
+public class ConsumerContactsDTO implements Contact {
 
-    String name;
-    Map<String, List<String>> contacts = new HashMap<>();
+    private String name;
+    private Map<String, List<String>> contacts = new HashMap<>();
 
 }

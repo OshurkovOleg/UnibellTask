@@ -22,4 +22,5 @@ public class PhoneNumberEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "consumers_id", referencedColumnName = "id")
     private ConsumerEntity consumerEntity;
+
 }

@@ -10,6 +10,9 @@ import ru.home.UnibellTask.repository.PhoneNumberRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static ru.home.UnibellTask.constant.Constants.CONSUMER_NOT_FOUND;
 
 @AllArgsConstructor
 @Service
@@ -19,13 +22,13 @@ public class PhoneNumberService {
     private final ConsumerRepository consumerRepository;
 
     public void save(long consumerID, PhoneNumberEntity phone) {
-        phone.setConsumerEntity(consumerRepository.findById(consumerID).get());
+        phone.setConsumerEntity(getConsumer(consumerID));
         phoneNumberRepository.save(phone);
     }
 
-    public ConsumerPhoneNumberDTO get(long id) {
+    public ConsumerPhoneNumberDTO get(long consumerID) {
         List<Long> phonesConsumer = new ArrayList<>();
-        ConsumerEntity consumer = consumerRepository.findById(id).get();
+        ConsumerEntity consumer = getConsumer(consumerID);
         consumer.getPhones().forEach(phone -> phonesConsumer.add(phone.getPhoneNumber()));
 
         return ConsumerPhoneNumberDTO.builder()
@@ -34,5 +37,9 @@ public class PhoneNumberService {
                 .build();
     }
 
+    private ConsumerEntity getConsumer(long consumerID) {
+        return consumerRepository.findById(consumerID)
+                .orElseThrow(() -> new NoSuchElementException(CONSUMER_NOT_FOUND));
+    }
 
 }

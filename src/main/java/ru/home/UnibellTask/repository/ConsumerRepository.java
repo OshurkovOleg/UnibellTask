@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ConsumerRepository extends CrudRepository<ConsumerEntity, Long> {
-
     List<ConsumerEntity> findAll();
+
 }

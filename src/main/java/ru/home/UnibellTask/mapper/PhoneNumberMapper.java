@@ -6,14 +6,11 @@ import ru.home.UnibellTask.entity.PhoneNumberEntity;
 
 @Component
 public class PhoneNumberMapper {
-    public PhoneNumberDTO toDTO(PhoneNumberEntity phoneNumberEntity) {
-        return PhoneNumberDTO.builder()
-                .phoneNumber(phoneNumberEntity.getPhoneNumber()).build();
-    }
 
     public PhoneNumberEntity toEntity(PhoneNumberDTO phoneNumberDTO) {
         return PhoneNumberEntity.builder()
                 .phoneNumber(phoneNumberDTO.getPhoneNumber())
                 .build();
     }
+
 }

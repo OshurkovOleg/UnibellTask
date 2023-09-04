@@ -10,6 +10,9 @@ import ru.home.UnibellTask.repository.EmailAddressRepository;
 import ru.home.UnibellTask.repository.PhoneNumberRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static ru.home.UnibellTask.constant.Constants.*;
 
 @AllArgsConstructor
 @Service
@@ -19,25 +22,34 @@ public class ConsumerService {
     private final EmailAddressRepository emailAddressRepository;
     private final PhoneNumberRepository phoneNumberRepository;
 
-    //Сохраняем клиента, после сразу почту с привязкой к клиенту, телефон.
-    public void save(ConsumerEntity consumer) {
-        ConsumerEntity saveConsumer = consumerRepository.save(consumer);
+    public void save(ConsumerEntity consumerEntity) {
+        ConsumerEntity consumer = consumerRepository.save(consumerEntity);
+        saveEmail(consumer);
+        savePhone(consumer);
+    }
 
-        List<EmailAddressEntity> emails = saveConsumer.getEmails();
-        EmailAddressEntity emailEntity = emails.stream().findFirst().get();
-        emailEntity.setConsumerEntity(saveConsumer);
-        emailAddressRepository.save(emailEntity);
-
-        List<PhoneNumberEntity> phones = saveConsumer.getPhones();
-        PhoneNumberEntity phoneEntity = phones.stream().findFirst().get();
-        phoneEntity.setConsumerEntity(saveConsumer);
+    private void savePhone(ConsumerEntity consumer) {
+        List<PhoneNumberEntity> phones = consumer.getPhones();
+        PhoneNumberEntity phoneEntity = phones.stream()
+                .findFirst().orElseThrow(() -> new NoSuchElementException(PHONE_NOT_FOUND));
+        phoneEntity.setConsumerEntity(consumer);
         phoneNumberRepository.save(phoneEntity);
     }
 
+    private void saveEmail(ConsumerEntity consumer) {
+        EmailAddressEntity emailEntity = consumer.getEmails().stream()
+                .findFirst().orElseThrow(() -> new NoSuchElementException(EMAIL_NOT_FOUND));
+        emailEntity.setConsumerEntity(consumer);
+        emailAddressRepository.save(emailEntity);
+    }
+
     public ConsumerEntity get(long id) {
-        ConsumerEntity consumer = consumerRepository.findById(id).get();
-        System.out.println();
-        return consumer;
+        return getConsumer(id);
+    }
+
+    private ConsumerEntity getConsumer(long id) {
+        return consumerRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(CONSUMER_NOT_FOUND));
     }
 
     public List<ConsumerEntity> getAll() {
